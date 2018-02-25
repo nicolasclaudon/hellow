@@ -1,0 +1,23 @@
+.PHONY: local create delete
+
+REPO=hellow
+#TIMESTAMP=tmp-$(shell date +%s )
+TIMESTAMP=0.0.1-snapshot
+
+clean:
+	mvn clean
+build:
+	mvn install
+local: build
+	@eval $$(minikube docker-env) ;\
+	docker image build -t $(REPO):$(TIMESTAMP) -f Dockerfile .
+	kubectl create namespace pf-dev
+	kubectl set image -f kubernetes/deploy/deployment.yml *=$(REPO):$(TIMESTAMP)
+
+create:
+	@eval $$(minikube docker-env) ;\
+	docker image build -t $(REPO):create -f Dockerfile .
+	kubectl create -f kubernetes/deploy/
+
+delete:
+	kubectl delete -f kubernetes/deploy/

@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+    name: hellow
+    namespace: default
+    annotations:
+        kubernetes.io/ingress.class: external
+spec:
+    rules:
+        -
+            http:
+                paths:
+                    -
+                        path: /
+                        backend:
+                            serviceName: hellow
+                            servicePort: 8083
